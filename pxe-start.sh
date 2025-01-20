@@ -29,6 +29,7 @@ dhcpd_interface = "eth0";
 subnet 192.168.0.0 netmask 255.255.255.0 {
         option routers 192.168.0.1;
         option subnet-mask 255.255.255.0;
+        option domain-name-servers 8.8.8.8;
         range dynamic-bootp 192.168.0.105 192.168.0.220;
         default-lease-time 3600;
         max-lease-time 7200;
