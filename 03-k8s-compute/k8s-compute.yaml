@@ -1,6 +1,6 @@
 ---
 - name: setting k8s-control
-  hosts: computeservers
+  hosts: computeServers
   become: yes
   vars_files:
     - /root/ansible-k8s/inventory/vars.yaml
