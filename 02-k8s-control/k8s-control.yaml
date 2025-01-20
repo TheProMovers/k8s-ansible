@@ -1,0 +1,146 @@
+---
+- name: setting k8s-control
+  hosts: controlservers
+  become: yes
+  vars:
+    kubernetes_version: "v1.30"
+    crio_version: "v1.30"
+    controlHost: "node2.example.com"
+    control1: "192.168.0.20"
+    kubeconfig_path: "/etc/kubernetes/admin.conf"
+
+  tasks:
+    - name: Create Kubernetes repo file
+      template:
+        src: kubernetes.repo.j2
+        dest: /etc/yum.repos.d/kubernetes.repo
+
+    - name: Create crio repo file
+      template:
+        src: cri-o.repo.j2
+        dest: /etc/yum.repos.d/cri-o.repo
+
+    - name: Install cri-o, kubelet, kubeadm, kubectl
+      dnf:
+        name:
+          - cri-o
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        enablerepo: kubernetes
+
+    - name: Enable and start services
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - crio
+        - kubelet
+
+    - name: Create kubeadm config file
+      template:
+        src: kubeadm-config.j2
+        dest: /root/kubeadm-config.yaml
+
+    - name: Check if kube-apiserver.yaml exists
+      stat:
+        path: /etc/kubernetes/manifests/kube-apiserver.yaml
+      register: kube_apiserver_stat
+
+    - name: init cluster
+      command: kubeadm init --config=kubeadm-config.yaml
+      when: kube_apiserver_stat.stat.exists == False
+
+    - name: Fetch admin.conf
+      fetch:
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/admin.conf
+        flat: yes
+
+    - name: Install tar
+      dnf:
+        name: tar
+        state: present
+
+    - name: Install git
+      dnf:
+        name: git
+        state: present
+
+    - name: Download get-helm.sh
+      get_url:
+        url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+        dest: /root/get_helm.sh
+        mode: '0755'
+
+    - name: Create bin directory in home
+      file:
+        path: /root/bin
+        state: directory
+        mode: '0755'
+
+    - name: Add /usr/local/bin to PATH
+      lineinfile:
+        path: /etc/environment
+        regexp: '^PATH='
+        line: 'PATH={{ lookup("env", "PATH") }}:/usr/local/bin'
+        state: present
+
+    - name: Run the get-helm.sh script
+      shell: sh /root/get_helm.sh
+      args:
+        creates: /usr/local/bin/helm
+
+    - name: Re-source the environment variables
+      shell: source /etc/environment
+
+    - name: Remove the get-helm.sh script
+      file:
+        path: /root/get_helm.sh
+        state: absent
+
+    - name: Move Helm binary
+      command: mv /usr/local/bin/helm /root/bin/
+      args:
+        creates: /root/bin/helm
+
+    - name: Add Calico Helm repo
+      shell: helm repo add projectcalico https://docs.tigera.io/calico/charts
+      args:
+        creates: /root/.cache/helm/repository/projectcalico-index.yaml
+
+    - name: Create tigera-operator namespace
+      shell: |
+        kubectl apply -f - <<EOF
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: tigera-operator
+        EOF
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path}}"
+
+    - name: Install Calico using Helm
+      shell: >
+        helm upgrade --install calico projectcalico/tigera-operator
+        --version v3.27.5
+        --namespace tigera-operator
+      args:
+        creates: /root/.cache/helm/repository/calico-index.yaml
+      environment:
+        KUBECONFIG: "{{ kubeconfig_path }}"
+##############################latency###############################
+
+#    - name: Install Calico using Helm
+#      shell: >
+#        helm install calico projectcalico/tigera-operator
+#        --version v3.27.5
+#        --namespace tigera-operator
+#      args:
+#        creates: /root/.cache/helm/repository/calico-index.yaml
+#      environment:
+#        KUBECONFIG: "{{ kubeconfig_path }}"
+
+

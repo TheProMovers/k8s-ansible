@@ -1,0 +1,52 @@
+---
+- name: setting k8s-control
+  hosts: computeservers
+  become: yes
+  vars:
+    kubernetes_version: "v1.30"
+    crio_version: "v1.30"
+    control1: "192.168.0.20"
+
+  tasks:
+    - name: Create Kubernetes repo file
+      template:
+        src: kubernetes.repo.j2
+        dest: /etc/yum.repos.d/kubernetes.repo
+
+    - name: Create crio repo file
+      template:
+        src: cri-o.repo.j2
+        dest: /etc/yum.repos.d/cri-o.repo
+
+    - name: Install cri-o, kubelet, kubeadm
+      dnf:
+        name:
+          - cri-o
+          - kubelet
+          - kubeadm
+        state: present
+        enablerepo: kubernetes
+
+    - name: Enable and start services
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - crio
+        - kubelet
+
+    - name: Create kubeadm join file
+      template:
+        src: kubeadm-join.j2
+        dest: /root/kubeadm-join.yaml
+
+    - name: Check if kubelet.conf exists
+      stat:
+        path: /etc/kubernetes/kubelet.conf
+      register: kubelet_conf
+
+    - name: Join cluster
+      command: kubeadm join --config=/root/kubeadm-join.yaml
+      when: kubelet_conf.stat.exists == false
+
