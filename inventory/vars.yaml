@@ -1,0 +1,52 @@
+kubernetes_version: "v1.30"
+crio_version: "v1.30"
+controller_host: "controller1.example.com"
+controller1: "172.16.0.110"
+kubeconfig_path: "/etc/kubernetes/admin.conf"
+
+k8s_nodes:
+  controller1:
+    ip_eth1: "172.16.0.110"
+    prefix_eth1: "16"
+    gw_eth1: "172.16.0.1"
+
+    ip_eth2: "172.26.0.110"
+    prefix_eth2: "16"
+    gw_eth2: "172.26.0.1"
+
+  storage1:
+    ip_eth1: "172.16.0.200"
+    prefix_eth1: "16"
+    gw_eth1: "172.16.0.1"
+
+    ip_eth2: "172.26.0.200"
+    prefix_eth2: "16"
+    gw_eth2: "172.26.0.1"
+
+  compute1:
+    ip_eth1: "172.16.0.120"
+    prefix_eth1: "16"
+    gw_eth1: "172.16.0.1"
+
+    ip_eth2: "172.26.0.120"
+    prefix_eth2: "16"
+    gw_eth2: "172.26.0.1"
+
+  compute2:
+    ip_eth1: "172.16.0.121"
+    prefix_eth1: "16"
+    gw_eth1: "172.16.0.1"
+
+    ip_eth2: "172.26.0.121"
+    prefix_eth2: "16"
+    gw_eth2: "172.26.0.1"
+
+  compute3:
+    ip_eth1: "172.16.0.122"
+    prefix_eth1: "16"
+    gw_eth1: "172.16.0.1"
+
+    ip_eth2: "172.26.0.122"
+    prefix_eth2: "16"
+    gw_eth2: "172.26.0.1"
+

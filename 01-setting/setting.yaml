@@ -1,7 +1,9 @@
 ---
 - name: setting k8s cluster
-  hosts: allservers
+  hosts: allServers
   become: yes
+  vars_files:
+    - /root/ansible-k8s/inventory/vars.yaml
   tasks:
     - name: stop firewalld
       service:
@@ -18,6 +20,26 @@
         regexp: '^SELINUX='
         line: 'SELINUX=permissive'
         backrefs: yes
+
+    - name: Configure eth1 with nmcli
+      community.general.nmcli:
+        conn_name: "eth1"
+        ifname: "eth1"
+        type: "ethernet"
+        ip4: "{{ k8s_nodes[inventory_hostname].ip_eth1 }}/{{ k8s_nodes[inventory_hostname].prefix_eth1 }}"
+        gw4: "{{ k8s_nodes[inventory_hostname].gw_eth1 }}"
+        autoconnect: yes
+        state: present
+
+    - name: Configure eth2 with nmcli
+      community.general.nmcli:
+        conn_name: "eth2"
+        ifname: "eth2"
+        type: "ethernet"
+        ip4: "{{ k8s_nodes[inventory_hostname].ip_eth2 }}/{{ k8s_nodes[inventory_hostname].prefix_eth2 }}"
+        gw4: "{{ k8s_nodes[inventory_hostname].gw_eth2 }}"
+        autoconnect: yes
+        state: present
 
     - name: swap off
       command: swapoff -a
@@ -68,7 +90,9 @@
         line: "{{ item }}"
         create: yes
       loop:
-        - "192.168.0.10 node1.example.com node1"
-        - "192.168.0.20 node2.example.com node2"
-        - "192.168.0.30 node3.example.com node3"
-
+        - "192.168.0.110 controller1.example.com controller1"
+        - "192.168.0.120 compute1.example.com compute1"
+        - "192.168.0.121 compute2.example.com compute2"
+        - "192.168.0.122 compute3.example.com compute3"
+        - "192.168.0.200 storage1.example.com storage1"
+        - "192.168.0.101 bootstrap.example.com bootstrap"

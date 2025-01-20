@@ -2,9 +2,9 @@
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 nodeRegistration:
-  name: "{{ controlHost }}"
+  name: "{{ controller_host }}"
 localAPIEndpoint:
-  advertiseAddress: "{{ control1 }}"
+  advertiseAddress: "{{ controller1 }}"
   bindPort: 6443
 bootstrapTokens:
   - token: "abcdef.0123456789abcdef"
@@ -20,7 +20,7 @@ apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
 kubernetesVersion: v1.30.0
 networking:
-  podSubnet: "192.168.0.0/16"
+  podSubnet: "172.16.0.0/16"
   serviceSubnet: "10.96.0.0/16"
   dnsDomain: "cluster.local"
-controlPlaneEndpoint: "{{ control1 }}:6443"
+controlPlaneEndpoint: "{{ controller1 }}:6443"

@@ -3,7 +3,7 @@ kind: JoinConfiguration
 caCertPath: /etc/kubernetes/pki/ca.crt
 discovery:
   bootstrapToken:
-    apiServerEndpoint: {{ control1 }}:6443
+    apiServerEndpoint: {{ controller1 }}:6443
     token: abcdef.0123456789abcdef
     unsafeSkipCAVerification: true
   timeout: 5m0s

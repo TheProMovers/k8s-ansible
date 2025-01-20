@@ -1,0 +1,15 @@
+[controlServers]
+controller1
+
+[computeServers]
+compute1
+compute2
+compute3
+
+[storageServers]
+storage1
+
+[allServers:children]
+controlServers
+computeServers
+storageServers

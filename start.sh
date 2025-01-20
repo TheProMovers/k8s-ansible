@@ -1,7 +1,18 @@
 #!/bin/bash
 ssh-keygen
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.20
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.30
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.110
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.120
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.121
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.122
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.200
+
+cat <<EOF >> /etc/hosts
+192.168.0.110 controller1.example.com controller1
+192.168.0.120 compute1.example.com compute1
+192.168.0.121 compute2.example.com compute2
+192.168.0.122 compute3.example.com compute3
+192.168.0.200 storage1.example.com storage1
+EOF
 
 dnf update -y
 yum -y install epel-release
@@ -27,18 +38,6 @@ dnf -y install kubectl
 
 mkdir /root/ansible
 mkdir /root/ansible/setting
-
-cat <<EOF > /root/ansible/setting/inventory
-[controlservers]
-192.168.0.20
-
-[computeservers]
-192.168.0.30
-
-[allservers:children]
-controlservers
-computeservers
-EOF
 
 dnf install -y tar
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3

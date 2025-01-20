@@ -1,13 +1,9 @@
 ---
 - name: setting k8s-control
-  hosts: controlservers
+  hosts: controlServers
   become: yes
-  vars:
-    kubernetes_version: "v1.30"
-    crio_version: "v1.30"
-    controlHost: "node2.example.com"
-    control1: "192.168.0.20"
-    kubeconfig_path: "/etc/kubernetes/admin.conf"
+  vars_files:
+    - /root/ansible-k8s/inventory/vars.yaml
 
   tasks:
     - name: Create Kubernetes repo file
@@ -131,16 +127,3 @@
         creates: /root/.cache/helm/repository/calico-index.yaml
       environment:
         KUBECONFIG: "{{ kubeconfig_path }}"
-##############################latency###############################
-
-#    - name: Install Calico using Helm
-#      shell: >
-#        helm install calico projectcalico/tigera-operator
-#        --version v3.27.5
-#        --namespace tigera-operator
-#      args:
-#        creates: /root/.cache/helm/repository/calico-index.yaml
-#      environment:
-#        KUBECONFIG: "{{ kubeconfig_path }}"
-
-
