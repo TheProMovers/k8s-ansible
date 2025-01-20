@@ -1,0 +1,55 @@
+---
+- name: setting storage server
+  hosts: storageServers
+  become: yes
+  tasks:
+    - name: Install nfs-utils
+      dnf:
+        name: nfs-utils
+        state: present
+
+    - name: Enable and start nfs-server
+      systemd:
+        name: nfs-server
+        enabled: yes
+        state: started
+
+    - name: Create /nfs directory
+      file:
+        path: /nfs
+        state: directory
+        mode: '0755'
+
+    - name: Create kubernetes.exports file for NFS
+      copy:
+        content: |
+          /nfs *(rw,sync,no_root_squash,insecure,no_subtree_check,nohide)
+        dest: /etc/exports.d/kubernetes.exports
+        mode: '0644'
+
+    - name: Enable and start nfs-server
+      systemd:
+        name: nfs-server
+        enabled: yes
+        state: started
+
+    - name: Export NFS shares
+      command: exportfs -avrs
+      args:
+        warn: false
+
+    - name: stop firewalld
+      service:
+        name: firewalld
+        state: stopped
+        enabled: no
+
+    - name: set SELinux to permissive
+      command: setenforce 0
+
+    - name: set SELinux to permissive permanently
+      lineinfile:
+        path: /etc/selinux/config
+        regexp: '^SELINUX='
+        line: 'SELINUX=permissive'
+        backrefs: yes
