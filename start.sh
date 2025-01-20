@@ -1,10 +1,4 @@
 #!/bin/bash
-ssh-keygen
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.110
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.120
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.121
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.122
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.0.200
 
 cat <<EOF >> /etc/hosts
 192.168.0.110 controller1.example.com controller1
@@ -13,6 +7,13 @@ cat <<EOF >> /etc/hosts
 192.168.0.122 compute3.example.com compute3
 192.168.0.200 storage1.example.com storage1
 EOF
+
+ssh-keygen
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@controller1
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@compute1
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@compute2
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@compute3
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@storage1
 
 dnf update -y
 yum -y install epel-release
