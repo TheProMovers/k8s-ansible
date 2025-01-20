@@ -37,9 +37,6 @@ gpgkey=https://pkgs.k8s.io/core:/stable:/$KUBERNETES_VERSION/rpm/repodata/repomd
 EOF
 dnf -y install kubectl
 
-mkdir /root/ansible
-mkdir /root/ansible/setting
-
 dnf install -y tar
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 mkdir ~/bin
