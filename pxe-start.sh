@@ -38,16 +38,16 @@ subnet 192.168.0.0 netmask 255.255.255.0 {
         filename "pxelinux.0";
 }
 
-host controller {
+host controller1 {
   hardware ethernet 02:AA:00:00:01:10;
   fixed-address 192.168.0.110;
-  option host-name "controller";
+  option host-name "controller1";
 }
 
-host storage {
+host storage1 {
   hardware ethernet 02:AA:00:00:02:00;
   fixed-address 192.168.0.200;
-  option host-name "storage";
+  option host-name "storage1";
 }
 
 host compute1 {
