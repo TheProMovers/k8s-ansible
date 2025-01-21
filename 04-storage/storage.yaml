@@ -35,8 +35,6 @@
 
     - name: Export NFS shares
       command: exportfs -avrs
-      args:
-        warn: false
 
     - name: stop firewalld
       service:
