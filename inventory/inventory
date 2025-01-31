@@ -1,5 +1,7 @@
 [controlServers]
 controller1
+controller2
+controller3
 
 [computeServers]
 compute1
@@ -7,9 +9,14 @@ compute2
 compute3
 
 [storageServers]
-storage1
+storage
+
+[dnsServers]
+dns
+
+[dbServers]
+db
 
 [allServers:children]
 controlServers
 computeServers
-storageServers

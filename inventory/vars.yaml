@@ -6,47 +6,55 @@ kubeconfig_path: "/etc/kubernetes/admin.conf"
 
 k8s_nodes:
   controller1:
-    ip_eth1: "172.16.0.110"
-    prefix_eth1: "16"
+    ip_eth1: "172.16.0.120"
+    prefix_eth1: "24"
     gw_eth1: "172.16.0.1"
 
-    ip_eth2: "172.26.0.110"
+    ip_eth2: "172.17.0.120"
     prefix_eth2: "16"
-    gw_eth2: "172.26.0.1"
+    gw_eth2: "172.17.0.1"
 
-  storage1:
-    ip_eth1: "172.16.0.200"
-    prefix_eth1: "16"
+  controller2:
+    ip_eth1: "172.16.0.121"
+    prefix_eth1: "24"
     gw_eth1: "172.16.0.1"
 
-    ip_eth2: "172.26.0.200"
+    ip_eth2: "172.17.0.121"
     prefix_eth2: "16"
-    gw_eth2: "172.26.0.1"
+    gw_eth2: "172.17.0.1"
+
+  controller3:
+    ip_eth1: "172.16.0.122"
+    prefix_eth1: "24"
+    gw_eth1: "172.16.0.1"
+
+    ip_eth2: "172.17.0.122"
+    prefix_eth2: "16"
+    gw_eth2: "172.17.0.1"
 
   compute1:
-    ip_eth1: "172.16.0.120"
-    prefix_eth1: "16"
+    ip_eth1: "172.16.0.125"
+    prefix_eth1: "24"
     gw_eth1: "172.16.0.1"
 
-    ip_eth2: "172.26.0.120"
+    ip_eth2: "172.17.0.125"
     prefix_eth2: "16"
-    gw_eth2: "172.26.0.1"
+    gw_eth2: "172.17.0.1"
 
   compute2:
-    ip_eth1: "172.16.0.121"
-    prefix_eth1: "16"
+    ip_eth1: "172.16.0.126"
+    prefix_eth1: "24"
     gw_eth1: "172.16.0.1"
 
-    ip_eth2: "172.26.0.121"
+    ip_eth2: "172.17.0.126"
     prefix_eth2: "16"
-    gw_eth2: "172.26.0.1"
+    gw_eth2: "172.17.0.1"
 
   compute3:
-    ip_eth1: "172.16.0.122"
-    prefix_eth1: "16"
+    ip_eth1: "172.16.0.127"
+    prefix_eth1: "24"
     gw_eth1: "172.16.0.1"
 
-    ip_eth2: "172.26.0.122"
+    ip_eth2: "172.17.0.127"
     prefix_eth2: "16"
-    gw_eth2: "172.26.0.1"
-
+    gw_eth2: "172.17.0.1"

@@ -30,42 +30,65 @@ subnet 192.168.0.0 netmask 255.255.255.0 {
         option routers 192.168.0.1;
         option subnet-mask 255.255.255.0;
         option domain-name-servers 8.8.8.8;
-        range dynamic-bootp 192.168.0.105 192.168.0.220;
         default-lease-time 3600;
         max-lease-time 7200;
         allow booting;
         allow bootp;
-        next-server 192.168.0.101;
+        next-server 192.168.0.135;
         filename "pxelinux.0";
 }
 
+host dns {
+  hardware ethernet 02:AA:00:00:01:36;
+  fixed-address 192.168.0.136;
+  option host-name "dns";
+}
+
+host storage {
+  hardware ethernet 02:AA:00:00:01:37;
+  fixed-address 192.168.0.137;
+  option host-name "storage";
+}
+
+host db {
+  hardware ethernet 02:AA:00:00:01:38;
+  fixed-address 192.168.0.138;
+  option host-name "db";
+}
+
 host controller1 {
-  hardware ethernet 02:AA:00:00:01:10;
-  fixed-address 192.168.0.110;
+  hardware ethernet 02:AA:00:00:01:20;
+  fixed-address 192.168.0.120;
   option host-name "controller1";
 }
 
-host storage1 {
-  hardware ethernet 02:AA:00:00:02:00;
-  fixed-address 192.168.0.200;
-  option host-name "storage1";
+host controller2 {
+  hardware ethernet 02:AA:00:00:01:21;
+  fixed-address 192.168.0.121;
+  option host-name "controller2";
+}
+
+host controller3 {
+  hardware ethernet 02:AA:00:00:01:22;
+  fixed-address 192.168.0.122;
+  option host-name "controller3";
 }
 
 host compute1 {
-  hardware ethernet 02:BB:00:00:01:20;
-  fixed-address 192.168.0.120;
+  hardware ethernet 02:BB:00:00:01:25;
+  fixed-address 192.168.0.125;
   option host-name "compute1";
 }
 
 host compute2 {
-  hardware ethernet 02:BB:00:00:01:21;
-  fixed-address 192.168.0.121;
+  hardware ethernet 02:BB:00:00:01:26;
+  fixed-address 192.168.0.126;
   option host-name "compute2";
 }
 
 host compute3 {
-  hardware ethernet 02:BB:00:00:01:22;
-  fixed-address 192.168.0.122;
+  hardware ethernet 02:BB:00:00:01:27;
+  fixed-address 192.168.0.127;
   option host-name "compute3";
 }
 EOF
@@ -117,7 +140,7 @@ cat << 'EOF' > /var/lib/tftpboot/pxelinux.cfg/default
 DEFAULT Rocky9_4gl_PXE
 LABEL Rocky9_4gl_PXE
   kernel vmlinuz
-  APPEND initrd=initrd.img inst.repo=ftp://192.168.0.101/pub inst.ks=ftp://192.168.0.101/rockypxe.ks
+  APPEND initrd=initrd.img inst.repo=ftp://192.168.0.135/pub inst.ks=ftp://192.168.0.135/rockypxe.ks
 EOF
 
 ###############################################################################
@@ -135,7 +158,7 @@ graphical
 %addon com_redhat_kdump --disable
 %end
 
-url --url=ftp://192.168.0.101/pub
+url --url=ftp://192.168.0.135/pub
 keyboard --xlayouts='kr'
 lang ko_KR.UTF-8
 
