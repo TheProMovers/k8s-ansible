@@ -1,7 +1,8 @@
 #!/bin/bash
 
 cat <<EOF >> /etc/hosts
-192.168.0.135 bootstrap.example.com bootstrap
+192.168.0.134 haproxy1.example.com haproxy1
+192.168.0.135 haproxy2.example.com haproxy2
 192.168.0.136 dns.example.com dns
 192.168.0.137 storage.example.com storage
 192.168.0.138 db.example.com db
